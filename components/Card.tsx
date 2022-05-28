@@ -9,6 +9,7 @@ const Card = (ride: {
   map_url: string;
   state: string;
   city: string;
+  distance: number;
 }) => {
   return (
     <>
@@ -16,17 +17,25 @@ const Card = (ride: {
         <div className="flex">
           <img
             className="object-cover w-full h-96 rounded-t-lg md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
-            src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80"
+            src={ride.map_url}
             alt=""
           />
         </div>
         <div className="flex flex-col">
-          <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Noteworthy technology acquisitions 2021
-          </h5>
           <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-            Here are the biggest enterprise technology acquisitions of 2021 so
-            far, in reverse chronological order.
+            Ride Id: {ride.id}
+          </p>
+          <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+            Origin Station: {ride.origin_station_code}
+          </p>
+          <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+            Station Path: [{ride.station_path.toString()}]
+          </p>
+          <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+            Date: {ride.date}
+          </p>
+          <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+            Distance: {ride.distance}
           </p>
         </div>
       </div>

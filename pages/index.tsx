@@ -6,7 +6,7 @@ export default function Home({ data, rides }: FullData) {
   return (
     <>
       <Navbar data={data} />
-      <Tabs rides={rides} />
+      <Tabs rides={rides} data={data} />
     </>
   );
 }

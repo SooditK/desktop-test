@@ -1,11 +1,9 @@
-import React from "react";
-import { TabsProps } from "../interfaces/IndexProps";
 import Card from "./Card";
 
-const CardWrapper = ({ rides }: TabsProps) => {
+const CardWrapper = ({ rides }: any) => {
   return (
     <div>
-      {rides.map(
+      {rides?.map(
         (ride: {
           id: number;
           origin_station_code: number;
@@ -15,6 +13,7 @@ const CardWrapper = ({ rides }: TabsProps) => {
           map_url: string;
           state: string;
           city: string;
+          distance: string;
         }) => (
           <Card
             city={ride.city}
@@ -26,6 +25,7 @@ const CardWrapper = ({ rides }: TabsProps) => {
             state={ride.state}
             station_path={ride.station_path}
             key={ride.id}
+            distance={Number(ride.distance)}
           />
         )
       )}
