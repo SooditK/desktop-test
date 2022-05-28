@@ -1,16 +1,25 @@
+import Dropdown from "rc-dropdown";
 import React, { useState, useEffect } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import { FullData, IndexProps, TabsProps } from "../interfaces/IndexProps";
+import { FullData, TabsProps } from "../interfaces/IndexProps";
 import CardWrapper from "./CardWrapper";
-import { calculateMinDistanceForEveryStation } from "../utils/functions";
+import {
+  calculateMinDistanceForEveryStation,
+  filterUpcomingRides,
+  filterPastRides,
+} from "../utils/functions";
 
 const TabComponent = ({ data, rides }: FullData) => {
   const [stationCode, setStationCode] = useState(data.station_code);
-  const [index, setIndex] = useState(0);
+  const [dropdown, setDropdown] = useState();
+  const [index, setIndex] = useState(1);
   const [nearestRides, setNearestRides] = useState<TabsProps[]>();
+  const [upcomingRides, setUpcomingRides] = useState<TabsProps[]>();
+  const [pastRides, setPastRides] = useState<TabsProps[]>();
+  const [cities, setCities] = useState<string[]>();
 
-  function handleIndexChange(index: number) {
-    setIndex(index);
+  function filterAllCities(rides: TabsProps[]) {
+    return rides.filter((ride: any) => ride.date === dropdown);
   }
 
   useEffect(() => {
@@ -21,15 +30,23 @@ const TabComponent = ({ data, rides }: FullData) => {
     setNearestRides(
       nearestRides.sort((a: any, b: any) => a.distance - b.distance)
     );
+    const bhoora = filterUpcomingRides(nearestRides);
+    setUpcomingRides(bhoora);
+    const pastRides = filterPastRides(nearestRides);
+    setPastRides(pastRides);
+    const cities = nearestRides.map((ride: any) => ride.city);
+    setCities(cities);
   }, [rides, stationCode]);
 
+  console.log(cities);
+
   return (
-    <div className="w-full h-full bg-gray-900">
+    <div className="w-full h-full min-h-[calc(100vh-5rem)] bg-gray-900">
       <div className="max-w-7xl mx-auto bg-gray-900 py-5">
         <Tabs className=" text-white px-10 py-5">
           <TabList className="flex gap-14 cursor-pointer">
             <Tab
-              onClick={() => handleIndexChange(1)}
+              onClick={() => setIndex(1)}
               className={`${
                 index == 1 ? "border-b-2 border-slate-50" : "border-0"
               } text-xl mb-5`}
@@ -37,7 +54,7 @@ const TabComponent = ({ data, rides }: FullData) => {
               Nearest Rides
             </Tab>
             <Tab
-              onClick={() => handleIndexChange(2)}
+              onClick={() => setIndex(2)}
               className={`${
                 index == 2 ? "border-b-2 border-slate-50" : "border-0"
               } text-xl mb-5`}
@@ -45,7 +62,7 @@ const TabComponent = ({ data, rides }: FullData) => {
               Upcoming Rides
             </Tab>
             <Tab
-              onClick={() => handleIndexChange(3)}
+              onClick={() => setIndex(3)}
               className={`${
                 index == 3 ? "border-b-2 border-slate-50" : "border-0"
               } text-xl mb-5`}
@@ -53,7 +70,6 @@ const TabComponent = ({ data, rides }: FullData) => {
               Past Rides
             </Tab>
           </TabList>
-
           <TabPanel>
             <h2>
               <CardWrapper rides={nearestRides} />
@@ -61,12 +77,12 @@ const TabComponent = ({ data, rides }: FullData) => {
           </TabPanel>
           <TabPanel>
             <h2>
-              <CardWrapper rides={rides} />
+              <CardWrapper rides={upcomingRides} />
             </h2>
           </TabPanel>
           <TabPanel>
             <h2>
-              <CardWrapper rides={rides} />
+              <CardWrapper rides={pastRides} />
             </h2>
           </TabPanel>
         </Tabs>

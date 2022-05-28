@@ -46,3 +46,20 @@ export function calculateMinDistanceForEveryStation(
   );
   return minDistanceArray;
 }
+export function filterUpcomingRides(rides: any) {
+  const today = new Date();
+  const filterRides = rides.filter((ride: any) => {
+    const rideDate = new Date(ride.date);
+    return rideDate > today;
+  });
+  return filterRides;
+}
+
+export function filterPastRides(rides: any) {
+  const today = new Date();
+  const filterRides = rides.filter((ride: any) => {
+    const rideDate = new Date(ride.date);
+    return rideDate < today;
+  });
+  return filterRides;
+}
