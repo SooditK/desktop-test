@@ -57,14 +57,35 @@ export function filterUpcomingRides(rides: RideProps[]) {
   return filterRides;
 }
 
-export function filterPastRides(rides: RideProps[], dropDownValue?: string) {
+export function filterPastRides(
+  rides: RideProps[],
+  dropDownValue?: string,
+  stateValue?: string
+) {
   const today = new Date();
   const toSortRides = dropDownValue
     ? rides.filter((ride) => ride.city === dropDownValue)
     : rides;
-  const filterRides = toSortRides.filter((ride) => {
+  const toSortRides2 = stateValue
+    ? toSortRides.filter((ride) => ride.state === stateValue)
+    : toSortRides;
+  const filterRides = toSortRides2.filter((ride) => {
     const rideDate = new Date(ride.date);
     return rideDate < today;
   });
   return filterRides;
+}
+
+export function filterAllRides(
+  rides: RideProps[],
+  dropDownValue?: string,
+  stateValue?: string
+) {
+  const toSortRides = dropDownValue
+    ? rides.filter((ride) => ride.city === dropDownValue)
+    : rides;
+  const toSortRides2 = stateValue
+    ? toSortRides.filter((ride) => ride.state === stateValue)
+    : toSortRides;
+  return toSortRides2;
 }

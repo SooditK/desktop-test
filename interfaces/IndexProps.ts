@@ -35,9 +35,15 @@ export interface RideProps {
 export type FullData = IndexProps & TabsProps;
 
 export interface DropdownProps {
-  dropdown: boolean;
-  setDropdown: (dropdown: boolean) => void;
-  setDropDownValue: (value: string) => void;
-  dropDownValue: string;
+  dropdown?: boolean;
+  setDropdown?: (dropdown: boolean) => void;
+  setDropDownValue?: (value: string) => void;
+  dropDownValue?: string;
   cities?: string[];
+  states?: string[];
+  stateValue?: string;
+  setStateValue?: (value: string) => void;
+  citiDropdown?: boolean;
+  setCitiDropdown?: (dropdown: boolean) => void;
+  value?: string;
 }
