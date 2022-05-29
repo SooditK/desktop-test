@@ -1,4 +1,3 @@
-import Dropdown from "rc-dropdown";
 import React, { useState, useEffect } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import { FullData, TabsProps } from "../interfaces/IndexProps";
@@ -8,25 +7,24 @@ import {
   filterUpcomingRides,
   filterPastRides,
 } from "../utils/functions";
+import DropdownWrapper from "./DropdownWrapper";
 
 const TabComponent = ({ data, rides }: FullData) => {
   const [stationCode, setStationCode] = useState(data.station_code);
-  const [dropdown, setDropdown] = useState();
+  const [dropDownValue, setDropDownValue] = useState<string>("");
+  const [dropdown, setDropdown] = useState<boolean>(false);
   const [index, setIndex] = useState(1);
   const [nearestRides, setNearestRides] = useState<TabsProps[]>();
   const [upcomingRides, setUpcomingRides] = useState<TabsProps[]>();
   const [pastRides, setPastRides] = useState<TabsProps[]>();
   const [cities, setCities] = useState<string[]>();
 
-  function filterAllCities(rides: TabsProps[]) {
-    return rides.filter((ride: any) => ride.date === dropdown);
-  }
-
   useEffect(() => {
     const distance = calculateMinDistanceForEveryStation(stationCode, rides);
     const nearestRides = rides.map((ride: any, index: number) => {
       return { ...ride, distance: distance[index] };
     });
+    setNearestRides(filteredNearestRides(nearestRides, dropDownValue));
     setNearestRides(
       nearestRides.sort((a: any, b: any) => a.distance - b.distance)
     );
@@ -36,9 +34,26 @@ const TabComponent = ({ data, rides }: FullData) => {
     setPastRides(pastRides);
     const cities = nearestRides.map((ride: any) => ride.city);
     setCities(cities);
-  }, [rides, stationCode]);
+  }, [dropDownValue, rides, stationCode]);
 
-  console.log(cities);
+  // filter nearestRides based on dropdown value
+  const filteredNearestRides = (
+    nearestRides: TabsProps[],
+    dropDownValue: string
+  ) => {
+    return nearestRides.filter((ride: any) => ride.city === dropDownValue);
+  };
+
+  // filter upcomingRides based on dropdown value
+  const filteredUpcomingRides = upcomingRides?.filter(
+    (ride: any) => ride.city === dropDownValue
+  );
+
+  // filter pastRides based on dropdown value
+  const filteredPastRides = pastRides?.filter(
+    (ride: any) => ride.city === dropDownValue
+  );
+  console.log(nearestRides);
 
   return (
     <div className="w-full h-full min-h-[calc(100vh-5rem)] bg-gray-900">
@@ -69,6 +84,15 @@ const TabComponent = ({ data, rides }: FullData) => {
             >
               Past Rides
             </Tab>
+            <div className="flex">
+              <DropdownWrapper
+                dropdown={dropdown}
+                cities={cities}
+                setDropdown={setDropdown}
+                setDropDownValue={setDropDownValue}
+                dropDownValue={dropDownValue}
+              />
+            </div>
           </TabList>
           <TabPanel>
             <h2>

@@ -22,3 +22,11 @@ export interface TabsProps {
 }
 
 export type FullData = IndexProps & TabsProps;
+
+export interface DropdownProps {
+  dropdown: boolean;
+  setDropdown: (dropdown: boolean) => void;
+  setDropDownValue: (value: string) => void;
+  dropDownValue: string;
+  cities?: string[];
+}
