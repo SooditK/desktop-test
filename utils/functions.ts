@@ -1,3 +1,5 @@
+import { RideProps } from "../interfaces/IndexProps";
+
 export function calculateMinimumDistance(
   stationCode: number,
   stationPath: number[]
@@ -46,18 +48,21 @@ export function calculateMinDistanceForEveryStation(
   );
   return minDistanceArray;
 }
-export function filterUpcomingRides(rides: any) {
+export function filterUpcomingRides(rides: RideProps[]) {
   const today = new Date();
-  const filterRides = rides.filter((ride: any) => {
+  const filterRides = rides.filter((ride) => {
     const rideDate = new Date(ride.date);
     return rideDate > today;
   });
   return filterRides;
 }
 
-export function filterPastRides(rides: any) {
+export function filterPastRides(rides: RideProps[], dropDownValue?: string) {
   const today = new Date();
-  const filterRides = rides.filter((ride: any) => {
+  const toSortRides = dropDownValue
+    ? rides.filter((ride) => ride.city === dropDownValue)
+    : rides;
+  const filterRides = toSortRides.filter((ride) => {
     const rideDate = new Date(ride.date);
     return rideDate < today;
   });

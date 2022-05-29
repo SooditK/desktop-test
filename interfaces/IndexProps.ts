@@ -21,6 +21,17 @@ export interface TabsProps {
   ];
 }
 
+export interface RideProps {
+  id: number;
+  origin_station_code: number;
+  station_path: number[];
+  destination_station_code: number;
+  date: string;
+  map_url: string;
+  state: string;
+  city: string;
+}
+
 export type FullData = IndexProps & TabsProps;
 
 export interface DropdownProps {

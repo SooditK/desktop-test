@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import { FullData, TabsProps } from "../interfaces/IndexProps";
+import { FullData, RideProps, TabsProps } from "../interfaces/IndexProps";
 import CardWrapper from "./CardWrapper";
 import {
   calculateMinDistanceForEveryStation,
@@ -14,46 +14,50 @@ const TabComponent = ({ data, rides }: FullData) => {
   const [dropDownValue, setDropDownValue] = useState<string>("");
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [index, setIndex] = useState(1);
-  const [nearestRides, setNearestRides] = useState<TabsProps[]>();
+  const [nearestRides, setNearestRides] = useState<RideProps[]>([]);
   const [upcomingRides, setUpcomingRides] = useState<TabsProps[]>();
-  const [pastRides, setPastRides] = useState<TabsProps[]>();
+  const [pastRides, setPastRides] = useState<RideProps[]>();
   const [cities, setCities] = useState<string[]>();
 
   useEffect(() => {
     const distance = calculateMinDistanceForEveryStation(stationCode, rides);
-    const nearestRides = rides.map((ride: any, index: number) => {
+    const nrRides = rides.map((ride: any, index: number) => {
       return { ...ride, distance: distance[index] };
     });
-    setNearestRides(filteredNearestRides(nearestRides, dropDownValue));
-    setNearestRides(
-      nearestRides.sort((a: any, b: any) => a.distance - b.distance)
-    );
-    const bhoora = filterUpcomingRides(nearestRides);
-    setUpcomingRides(bhoora);
-    const pastRides = filterPastRides(nearestRides);
+    setNearestRides([
+      ...filteredNearestRides(nrRides, dropDownValue).sort(
+        (a: any, b: any) => a.distance - b.distance
+      ),
+    ]);
+    // const bhoora = filterUpcomingRides(nrRides, dropDownValue);
+    // setUpcomingRides(bhoora);
+    const pastRides = filterPastRides(nrRides, dropDownValue);
     setPastRides(pastRides);
-    const cities = nearestRides.map((ride: any) => ride.city);
+    const cities = nrRides.map((ride: any) => ride.city);
     setCities(cities);
   }, [dropDownValue, rides, stationCode]);
 
   // filter nearestRides based on dropdown value
   const filteredNearestRides = (
-    nearestRides: TabsProps[],
+    nearestRides: RideProps[],
     dropDownValue: string
   ) => {
-    return nearestRides.filter((ride: any) => ride.city === dropDownValue);
+    if (!dropDownValue) return nearestRides;
+    return nearestRides.filter((ride) => ride.city === dropDownValue);
   };
 
   // filter upcomingRides based on dropdown value
-  const filteredUpcomingRides = upcomingRides?.filter(
-    (ride: any) => ride.city === dropDownValue
-  );
-
+  // const filterPastRides = (
+  //   pastRides: RideProps[],
+  //   dropDownValue: string
+  // ) => {
+  //   if (!dropDownValue) return pastRides;
+  //   return pastRides.filter((ride) => ride.city === dropDownValue);
+  // };
   // filter pastRides based on dropdown value
-  const filteredPastRides = pastRides?.filter(
+  const filterUpcomingRides = pastRides?.filter(
     (ride: any) => ride.city === dropDownValue
   );
-  console.log(nearestRides);
 
   return (
     <div className="w-full h-full min-h-[calc(100vh-5rem)] bg-gray-900">
